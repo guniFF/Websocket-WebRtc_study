@@ -1,4 +1,16 @@
-# 오픈비두 리소스
-/openvidu/cdr
-/openvidu/recordings
-/openvidu/custom-layout
+# /openvidu/cdr 디렉토리의 모든 파일을 무시
+/openvidu/cdr/*
+# /openvidu/cdr 디렉토리의 README.md 파일은 무시하지 않음
+!/openvidu/cdr/README.md
+
+# /openvidu/recordings 디렉토리의 모든 파일을 무시
+/openvidu/recordings/*
+# /openvidu/recordings 디렉토리의 README.md 파일은 무시하지 않음
+!/openvidu/recordings/README.md
+
+# /openvidu/custom-layout 디렉토리의 모든 파일을 무시
+/openvidu/custom-layout/*
+# /openvidu/custom-layout 디렉토리의 README.md 파일은 무시하지 않음
+!/openvidu/custom-layout/README.md
+
+.env

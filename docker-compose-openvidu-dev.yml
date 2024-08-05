@@ -1,0 +1,75 @@
+services:
+  springboot-app:
+    image: jaeyong2/vividudu:1.0
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - openvidu-server
+    environment:
+      - OPENVIDU_URL=http://openvidu-server:5443
+      - OPENVIDU_SECRET=1234
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=banchan
+
+  kms:
+    image: kurento/kurento-media-server:latest
+    container_name: kms
+    ports:
+      - "8888:8888"
+      - "40000:40000/udp"
+    networks:
+      - mynetwork
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=banchan
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p1234"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    
+  openvidu-server:
+    image: openvidu/openvidu-server:2.28.0
+    container_name: openvidu-server
+    ports:
+      - "5443:5443"
+    networks:
+      - mynetwork
+    environment:
+      - OPENVIDU_SECRET=1234
+      - DOMAIN_OR_PUBLIC_IP=i11e105.p.ssafy.io
+      - KMS_URIS=["ws://kms:8888/kurento"]
+      - OPENVIDU_CDR=true
+      - OPENVIDU_CDR_PATH=/opt/openvidu/cdr
+      - OPENVIDU_RECORDING=true
+      - OPENVIDU_RECORDING_PATH=/opt/openvidu/recordings
+      - OPENVIDU_RECORDING_CUSTOM_LAYOUT=/opt/openvidu/custom-layout
+      - OPENVIDU_RECORDING_AUTOSTOP_TIMEOUT=120
+      - SERVER_SSL_ENABLED=false
+      - SERVER_PORT=5443
+    volumes:
+      - ./openvidu/recordings:/opt/openvidu/recordings
+      - ./openvidu/custom-layout:/opt/openvidu/custom-layout
+      - ./openvidu/cdr:/opt/openvidu/cdr
+      - /var/run/docker.sock:/var/run/docker.sock # for Linux
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+networks:
+  mynetwork:
+    external: true
+
+volumes:
+  mysql_data:
