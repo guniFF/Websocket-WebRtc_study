@@ -10,7 +10,7 @@ services:
       - "40000/udp"
     <<: *default
     networks:
-      - openvidu_test
+      - mynetwork
     
   openvidu-server:
     image: openvidu/openvidu-server:2.28.0
@@ -19,7 +19,7 @@ services:
       - "5443"
     <<: *default
     networks:
-      - openvidu_test
+      - mynetwork
     environment:
       - OPENVIDU_SECRET=${OPENVIDU_SECRET}
       - DOMAIN_OR_PUBLIC_IP=${DOMAIN_OR_PUBLIC_IP}
@@ -38,11 +38,10 @@ services:
       - ./openvidu/cdr:/opt/openvidu/cdr
       - //var/run/docker.sock:/var/run/docker.sock # for Linux
     depends_on:
-      mysql:
-        condition: service_healthy
+      - kms
 
 networks:
-  openvidu_test:
+  mynetwork:
     external: true
 
 volumes:
