@@ -1,0 +1,21 @@
+x-environments: &default
+  env_file: ../.DEV.env # 기본 환경 파일을 지정합니다.
+
+services:
+#     mysql:
+#       image: mysql:8.0
+#       environment:
+#         - MYSQL_ROOT_PASSWORD=1234
+#         - MYSQL_DATABASE=banchan
+#       ports:
+#         - "3306:3306"
+#       <<: *default
+
+
+  banchan_back1:
+      container_name: banchan_back1
+      build:
+        dockerfile: Dockerfile.dev
+      ports:
+        - "8081:8080"
+      <<: *default

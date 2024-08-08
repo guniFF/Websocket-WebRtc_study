@@ -13,4 +13,4 @@
 # /openvidu/custom-layout 디렉토리의 README.md 파일은 무시하지 않음
 !/openvidu/custom-layout/README.md
 
-.env
+# .env
